@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+*.log
+*.pyc
+__pycache__/
+generar_iconos.py
+MICORSE_arquitectura_y_tecnologias.pdf

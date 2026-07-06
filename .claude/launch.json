@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "micoche",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-p", "5174", "-s", "C:\\TODO\\TODO_INFORMATICA\\PROYECTOS\\MICOCHE"],
+      "port": 5174
+    }
+  ]
+}

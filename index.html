@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MICOCHE</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-logo">
+      <img src="./assets/logo.svg" alt="MICOCHE" class="header-icon">
+      <span class="header-titulo">MICOCHE</span>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="app-main" id="app-main">
+
+    <!-- ═══════════════════════════════════════
+         VISTA: LISTA DE VEHÍCULOS
+    ════════════════════════════════════════ -->
+    <section class="vista" id="vista-vehiculos">
+      <h2 class="seccion-titulo">Mis vehículos</h2>
+      <ul class="lista-vehiculos" id="lista-vehiculos" role="list">
+        <!-- generado por JS -->
+      </ul>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         VISTA: DETALLE DE VEHÍCULO
+    ════════════════════════════════════════ -->
+    <section class="vista oculto" id="vista-detalle">
+
+      <div class="detalle-cabecera">
+        <div class="detalle-nav">
+          <button class="btn-volver" id="btn-volver">&#8249; Vehículos</button>
+        </div>
+        <div class="detalle-titulo-fila">
+          <div>
+            <div class="detalle-marca-modelo" id="detalle-marca-modelo">—</div>
+            <span class="detalle-matricula" id="detalle-matricula">—</span>
+          </div>
+          <div class="detalle-acciones">
+            <button class="btn-icono" id="btn-editar-vehiculo" title="Editar vehículo" aria-label="Editar vehículo">&#9998;</button>
+            <button class="btn-icono" id="btn-borrar-vehiculo" title="Borrar vehículo" aria-label="Borrar vehículo">&#128465;</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="seccion-titulo">Coste acumulado por año</h2>
+      <div class="coste-anio-caja" id="coste-anio-caja">
+        <!-- generado por JS -->
+      </div>
+
+      <h2 class="seccion-titulo">Incidencias</h2>
+      <ul class="lista-incidencias" id="lista-incidencias" role="list">
+        <!-- generado por JS -->
+      </ul>
+
+    </section>
+
+  </main>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar" id="action-bar-vehiculos">
+    <button class="btn-accion btn-principal" id="btn-nuevo-vehiculo">+ Vehículo</button>
+  </div>
+
+  <div class="action-bar oculto" id="action-bar-detalle">
+    <button class="btn-accion btn-principal" id="btn-nueva-incidencia">+ Incidencia</button>
+    <button class="btn-accion btn-secundario" id="btn-exportar">Exportar</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL VEHÍCULO (nuevo / editar)
+  ════════════════════════════════════════════════ -->
+  <div id="modal-vehiculo" class="modal oculto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-cierra-modal></div>
+    <div class="modal-contenido">
+      <button class="modal-cerrar" data-cierra-modal aria-label="Cerrar">&times;</button>
+      <h2 class="modal-titulo" id="vehiculo-titulo-modal">Nuevo vehículo</h2>
+
+      <form id="form-vehiculo" novalidate>
+
+        <div class="form-grupo">
+          <label class="form-label" for="vehiculo-marca">Marca</label>
+          <input type="text" id="vehiculo-marca" class="form-input" placeholder="Ej: BMW" autocomplete="off">
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label" for="vehiculo-modelo">Modelo</label>
+          <input type="text" id="vehiculo-modelo" class="form-input" placeholder="Ej: Serie 3" autocomplete="off">
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label" for="vehiculo-matricula">Matrícula</label>
+          <input type="text" id="vehiculo-matricula" class="form-input uppercase" placeholder="Ej: 1234 ABC" autocomplete="off">
+        </div>
+
+        <div class="form-acciones">
+          <button type="submit" class="btn-form btn-guardar">Guardar</button>
+          <button type="button" class="btn-form btn-borrar oculto" id="btn-borrar-vehiculo-modal">Borrar</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL INCIDENCIA (nueva / editar)
+  ════════════════════════════════════════════════ -->
+  <div id="modal-incidencia" class="modal oculto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-cierra-modal></div>
+    <div class="modal-contenido">
+      <button class="modal-cerrar" data-cierra-modal aria-label="Cerrar">&times;</button>
+      <h2 class="modal-titulo">Incidencia</h2>
+
+      <form id="form-incidencia" novalidate>
+
+        <div class="form-grupo oculto" id="grupo-incidencia-fecha">
+          <label class="form-label">Fecha</label>
+          <div class="form-fecha-fija" id="incidencia-fecha-texto">—</div>
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label" for="incidencia-tipo">Tipo de incidencia</label>
+          <select id="incidencia-tipo" class="form-select">
+            <option value="" disabled selected>Selecciona un tipo</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label" for="incidencia-asunto">Incidencia</label>
+          <input type="text" id="incidencia-asunto" class="form-input" placeholder="Ej: Cambio de aceite" autocomplete="off">
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label" for="incidencia-coste">Coste (€)</label>
+          <input type="number" id="incidencia-coste" class="form-input" min="0" step="0.01" placeholder="0.00">
+        </div>
+
+        <div class="form-acciones">
+          <button type="submit" class="btn-form btn-guardar">Guardar</button>
+          <button type="button" class="btn-form btn-borrar oculto" id="btn-borrar-incidencia-modal">Borrar</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL CONFIRMAR (genérico, para borrados)
+  ════════════════════════════════════════════════ -->
+  <div id="modal-confirmar" class="modal oculto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-cierra-modal></div>
+    <div class="modal-contenido">
+      <button class="modal-cerrar" data-cierra-modal aria-label="Cerrar">&times;</button>
+      <h2 class="modal-titulo" id="confirmar-titulo">¿Confirmar?</h2>
+      <p class="modal-texto" id="confirmar-texto"></p>
+      <div class="form-acciones">
+        <button type="button" class="btn-form btn-secundario-form" data-cierra-modal>Cancelar</button>
+        <button type="button" class="btn-form btn-borrar" id="btn-confirmar-aceptar">Borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL EXPORTAR PDF
+  ════════════════════════════════════════════════ -->
+  <div id="modal-exportar" class="modal oculto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-cierra-modal></div>
+    <div class="modal-contenido">
+      <button class="modal-cerrar" data-cierra-modal aria-label="Cerrar">&times;</button>
+      <h2 class="modal-titulo">Exportar historial a PDF</h2>
+      <p class="modal-texto">Se generará un PDF con todas las incidencias del vehículo, el coste por año y el total acumulado.</p>
+      <div class="form-acciones">
+        <button type="button" class="btn-form btn-guardar" id="btn-descargar-pdf">Descargar PDF</button>
+        <button type="button" class="btn-form btn-secundario-form oculto" id="btn-compartir-pdf">Compartir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast oculto" role="status" aria-live="polite"></div>
+
+  <!-- SCRIPTS — orden importante -->
+  <script src="./js/lib/dexie.min.js"></script>
+  <script src="./js/lib/pdfmake.min.js"></script>
+  <script src="./js/lib/vfs_fonts.js"></script>
+  <script src="./js/db.js"></script>
+  <script src="./js/ui-comunes.js"></script>
+  <script src="./js/ui-vehiculos.js"></script>
+  <script src="./js/ui-incidencias.js"></script>
+  <script src="./js/pdf-generator.js"></script>
+  <script src="./js/app.js"></script>
+
+</body>
+</html>

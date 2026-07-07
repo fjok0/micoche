@@ -40,12 +40,13 @@
   }
 
   /* ── Modal de confirmación genérico ───── */
-  function confirmar(titulo, texto, onAceptar) {
+  function confirmar(titulo, texto, onAceptar, textoBoton) {
     document.getElementById("confirmar-titulo").textContent = titulo;
     document.getElementById("confirmar-texto").textContent = texto;
 
     const btn = document.getElementById("btn-confirmar-aceptar");
     const nuevoBtn = btn.cloneNode(true);
+    nuevoBtn.textContent = textoBoton || "Borrar";
     btn.parentNode.replaceChild(nuevoBtn, btn);
 
     nuevoBtn.addEventListener("click", function () {

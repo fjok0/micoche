@@ -16,6 +16,7 @@
       <img src="./assets/logo.svg" alt="MICOCHE" class="header-icon">
       <span class="header-titulo">MICOCHE</span>
     </div>
+    <button class="btn-icono" id="btn-abrir-backup" title="Copia de seguridad" aria-label="Copia de seguridad">&#128190;</button>
   </header>
 
   <!-- MAIN -->
@@ -185,6 +186,26 @@
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════
+       MODAL COPIA DE SEGURIDAD
+  ════════════════════════════════════════════════ -->
+  <div id="modal-backup" class="modal oculto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-cierra-modal></div>
+    <div class="modal-contenido">
+      <button class="modal-cerrar" data-cierra-modal aria-label="Cerrar">&times;</button>
+      <h2 class="modal-titulo">Copia de seguridad</h2>
+      <p class="modal-texto">Exporta todos tus vehículos e incidencias a un archivo. Guárdalo en el correo, Drive o donde prefieras para poder recuperarlo si desinstalas la app o cambias de móvil.</p>
+      <div class="form-acciones">
+        <button type="button" class="btn-form btn-guardar" id="btn-exportar-backup">Exportar copia de seguridad</button>
+      </div>
+      <p class="modal-texto" style="margin-top:22px;">Para restaurar una copia anterior, selecciona el archivo exportado. <b>Esto reemplazará todos los datos actuales.</b></p>
+      <div class="form-acciones">
+        <button type="button" class="btn-form btn-secundario-form" id="btn-importar-backup">Importar copia de seguridad</button>
+      </div>
+      <input type="file" id="input-importar-backup" accept="application/json" class="oculto">
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div id="toast" class="toast oculto" role="status" aria-live="polite"></div>
 
@@ -196,6 +217,7 @@
   <script src="./js/ui-comunes.js"></script>
   <script src="./js/ui-vehiculos.js"></script>
   <script src="./js/ui-incidencias.js"></script>
+  <script src="./js/ui-backup.js"></script>
   <script src="./js/pdf-generator.js"></script>
   <script src="./js/app.js"></script>
 

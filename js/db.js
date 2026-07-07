@@ -162,6 +162,35 @@
   }
 
   /* ══════════════════════════════════════════
+     COPIA DE SEGURIDAD (exportar / importar)
+  ══════════════════════════════════════════ */
+  async function exportarBackup() {
+    const vehiculos = await db.vehiculos.toArray();
+    const incidencias = await db.incidencias.toArray();
+    return {
+      app: "MICOCHE",
+      version: 1,
+      generadoEn: fechaHoyISO(),
+      vehiculos,
+      incidencias
+    };
+  }
+
+  async function importarBackup(backup) {
+    if (!backup || backup.app !== "MICOCHE" ||
+        !Array.isArray(backup.vehiculos) || !Array.isArray(backup.incidencias)) {
+      throw new Error("El archivo no es una copia de seguridad válida de MICOCHE");
+    }
+
+    await db.transaction("rw", db.vehiculos, db.incidencias, async () => {
+      await db.vehiculos.clear();
+      await db.incidencias.clear();
+      if (backup.vehiculos.length)   await db.vehiculos.bulkAdd(backup.vehiculos);
+      if (backup.incidencias.length) await db.incidencias.bulkAdd(backup.incidencias);
+    });
+  }
+
+  /* ══════════════════════════════════════════
      NAMESPACE PÚBLICO
   ══════════════════════════════════════════ */
   window.MICOCHE = {
@@ -182,7 +211,10 @@
     getCosteTotal,
     // Tipos de incidencia
     TIPOS_INCIDENCIA,
-    getLabelTipoIncidencia
+    getLabelTipoIncidencia,
+    // Copia de seguridad
+    exportarBackup,
+    importarBackup
   };
 
 })();

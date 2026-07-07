@@ -77,13 +77,19 @@
       return;
     }
 
+    const ahora = Date.now();
     for (const inc of incidencias) {
       const li = document.createElement("li");
       li.className = "incidencia-item";
       li.tabIndex = 0;
       const claseCoste = inc.coste === 0 ? "incidencia-coste coste-cero" : "incidencia-coste";
+      const esProgramada = new Date(inc.fecha).getTime() > ahora;
+      const puntoProgramada = esProgramada
+        ? '<span class="incidencia-punto-programada" title="Programada (fecha futura)"></span>'
+        : "";
       li.innerHTML = `
         <div class="incidencia-contenido">
+          ${puntoProgramada}
           <span class="incidencia-tipo-badge">${escapeHtml(MICOCHE.getLabelTipoIncidencia(inc.tipo))}</span>
           <div class="incidencia-asunto">${escapeHtml(inc.asunto)}</div>
           <div class="incidencia-fecha">${MICOCHE_UI.formatearFechaLarga(inc.fecha)}</div>
@@ -103,6 +109,12 @@
     return div.innerHTML;
   }
 
+  function datetimeLocalDesdeISO(iso) {
+    const d = new Date(iso);
+    const pad = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
   /* ══════════════════════════════════════════
      MODAL INCIDENCIA — alta / edición
   ══════════════════════════════════════════ */
@@ -119,7 +131,7 @@
   function abrirModalNuevaIncidencia() {
     incidenciaEditandoId = null;
     $("form-incidencia").reset();
-    $("grupo-incidencia-fecha").classList.add("oculto");
+    $("incidencia-fecha").value = datetimeLocalDesdeISO(new Date().toISOString());
     $("btn-borrar-incidencia-modal").classList.add("oculto");
     MICOCHE_UI.abrirModal("modal-incidencia");
   }
@@ -128,11 +140,10 @@
     const inc = await MICOCHE.getIncidencia(id);
     if (!inc) return;
     incidenciaEditandoId = id;
+    $("incidencia-fecha").value = datetimeLocalDesdeISO(inc.fecha);
     $("incidencia-tipo").value = inc.tipo;
     $("incidencia-asunto").value = inc.asunto;
     $("incidencia-coste").value = inc.coste;
-    $("incidencia-fecha-texto").textContent = MICOCHE_UI.formatearFechaLarga(inc.fecha);
-    $("grupo-incidencia-fecha").classList.remove("oculto");
     $("btn-borrar-incidencia-modal").classList.remove("oculto");
     MICOCHE_UI.abrirModal("modal-incidencia");
   }
@@ -140,6 +151,7 @@
   async function onSubmitIncidencia(e) {
     e.preventDefault();
     const datos = {
+      fecha: $("incidencia-fecha").value,
       tipo: $("incidencia-tipo").value,
       asunto: $("incidencia-asunto").value,
       coste: $("incidencia-coste").value

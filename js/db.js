@@ -98,6 +98,12 @@
   }
 
   function validarIncidencia(datos) {
+    const fechaDate = new Date(datos.fecha);
+    if (!datos.fecha || isNaN(fechaDate.getTime())) {
+      throw new Error("La fecha y hora no son válidas");
+    }
+    const fecha = fechaDate.toISOString();
+
     const tipo = (datos.tipo || "").trim().toUpperCase();
     if (!TIPOS_INCIDENCIA.some(t => t.valor === tipo)) {
       throw new Error("Selecciona un tipo de incidencia");
@@ -114,14 +120,13 @@
       throw new Error("El coste debe ser un número igual o mayor que 0");
     }
 
-    return { tipo, asunto, coste };
+    return { fecha, tipo, asunto, coste };
   }
 
   async function crearIncidencia(vehiculoId, datos) {
     const limpio = validarIncidencia(datos);
     const id = await db.incidencias.add({
       vehiculoId,
-      fecha: fechaHoyISO(),
       ...limpio
     });
     return id;

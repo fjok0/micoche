@@ -329,6 +329,17 @@ body {
   margin-bottom: 4px;
 }
 
+.incidencia-punto-programada {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-rojo-accion);
+  margin-right: 6px;
+  margin-bottom: 4px;
+  vertical-align: middle;
+}
+
 .incidencia-asunto {
   font-size: 0.94rem;
   font-weight: 600;
@@ -453,15 +464,6 @@ body {
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-}
-
-.form-fecha-fija {
-  font-size: 0.9rem;
-  color: var(--color-texto);
-  background: var(--color-fondo);
-  border-radius: var(--radio-sm);
-  padding: 10px 12px;
-  font-weight: 600;
 }
 
 .form-input,

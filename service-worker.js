@@ -1,4 +1,4 @@
-const CACHE_NAME = "micoche-v3";
+const CACHE_NAME = "micoche-v4";
 
 const PRECACHE = [
   "./",

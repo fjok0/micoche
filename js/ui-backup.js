@@ -4,13 +4,28 @@
   function $(id) { return document.getElementById(id); }
 
   function abrirModalBackup() {
+    $("backup-version").textContent = "Versión: " + MICOCHE_ARCHIVOS.etiquetaVersion();
+    limpiarErrorBackup();
     MICOCHE_UI.abrirModal("modal-backup");
+  }
+
+  function mostrarErrorBackup(texto) {
+    const e = $("backup-error");
+    e.textContent = texto;
+    e.classList.remove("oculto");
+  }
+
+  function limpiarErrorBackup() {
+    const e = $("backup-error");
+    e.textContent = "";
+    e.classList.add("oculto");
   }
 
   /* ══════════════════════════════════════════
      EXPORTAR
   ══════════════════════════════════════════ */
   async function onExportarBackup() {
+    limpiarErrorBackup();
     try {
       const backup = await MICOCHE.exportarBackup();
       const json = JSON.stringify(backup, null, 2);
@@ -28,12 +43,10 @@
     } catch (err) {
       console.error(err);
       MICOCHE_UI.mostrarToast("No se pudo exportar la copia de seguridad", "error");
-      // Detalle técnico visible para poder diagnosticar el fallo en el móvil
-      window.alert(
-        "No se pudo exportar la copia de seguridad." +
-        String.fromCharCode(10, 10) + "Detalle técnico:" + String.fromCharCode(10) +
-        MICOCHE_ARCHIVOS.describir(err) +
-        String.fromCharCode(10, 10) + "Entorno: " + MICOCHE_ARCHIVOS.entorno()
+      // Detalle técnico fijo en pantalla (no desaparece) para diagnosticar el fallo
+      mostrarErrorBackup(
+        "No se pudo exportar. Detalle: " + MICOCHE_ARCHIVOS.describir(err) +
+        "  ·  Entorno: " + MICOCHE_ARCHIVOS.entorno()
       );
     }
   }
@@ -49,14 +62,20 @@
     const file = e.target.files[0];
     e.target.value = "";
     if (!file) return;
+    limpiarErrorBackup();
 
     const reader = new FileReader();
+    reader.onerror = function () {
+      mostrarErrorBackup("No se pudo leer el archivo seleccionado: " +
+        MICOCHE_ARCHIVOS.describir(reader.error));
+    };
     reader.onload = function () {
       let backup;
       try {
         backup = JSON.parse(reader.result);
       } catch (err) {
         MICOCHE_UI.mostrarToast("El archivo no es un JSON válido", "error");
+        mostrarErrorBackup("El archivo seleccionado no es un JSON válido (" + file.name + ").");
         return;
       }
 
@@ -71,6 +90,7 @@
             await MICOCHE_UI.mostrarListaVehiculos();
           } catch (err) {
             MICOCHE_UI.mostrarToast(err.message, "error");
+            mostrarErrorBackup("No se pudo importar: " + MICOCHE_ARCHIVOS.describir(err));
           }
         },
         "Reemplazar"

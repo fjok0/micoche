@@ -174,5 +174,16 @@
                ", navigator.canShare=" + (typeof navigator.canShare);
     }
 
-    window.MICOCHE_ARCHIVOS = { esNativo, puedeCompartir, guardarOCompartir, describir, entorno };
+    // Identificador de esta version del modulo (se muestra en pantalla para
+    // saber que version corre en el movil y si es el APK o el navegador).
+    const VERSION = "archivos-v3";
+
+    function etiquetaVersion() {
+        return VERSION + " · " + (esNativo() ? "app instalada (APK)" : "navegador");
+    }
+
+    window.MICOCHE_ARCHIVOS = {
+        esNativo, puedeCompartir, guardarOCompartir, describir, entorno,
+        version: VERSION, etiquetaVersion
+    };
 })();

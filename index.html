@@ -183,6 +183,7 @@
         <button type="button" class="btn-form btn-guardar" id="btn-descargar-pdf">Descargar PDF</button>
         <button type="button" class="btn-form btn-secundario-form oculto" id="btn-compartir-pdf">Compartir</button>
       </div>
+      <p id="pdf-error" class="backup-error oculto"></p>
     </div>
   </div>
 
@@ -198,11 +199,13 @@
       <div class="form-acciones">
         <button type="button" class="btn-form btn-guardar" id="btn-exportar-backup">Exportar copia de seguridad</button>
       </div>
+      <p id="backup-error" class="backup-error oculto"></p>
       <p class="modal-texto" style="margin-top:22px;">Para restaurar una copia anterior, selecciona el archivo exportado. <b>Esto reemplazará todos los datos actuales.</b></p>
       <div class="form-acciones">
         <button type="button" class="btn-form btn-secundario-form" id="btn-importar-backup">Importar copia de seguridad</button>
       </div>
       <input type="file" id="input-importar-backup" accept="application/json" class="oculto">
+      <p id="backup-version" class="backup-version"></p>
     </div>
   </div>
 

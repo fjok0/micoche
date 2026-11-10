@@ -222,6 +222,7 @@
   }
 
   async function onDescargarPdf() {
+    $("pdf-error").classList.add("oculto");
     try {
       const { pdfDoc, filename } = await MICOCHE_PDF.generarPDF(vehiculoActualId);
 
@@ -244,13 +245,11 @@
     } catch (err) {
       console.error(err);
       MICOCHE_UI.mostrarToast("No se pudo generar el PDF", "error");
-      // Detalle técnico visible para poder diagnosticar el fallo en el móvil
-      window.alert(
-        "No se pudo guardar el PDF." +
-        String.fromCharCode(10, 10) + "Detalle técnico:" + String.fromCharCode(10) +
-        MICOCHE_ARCHIVOS.describir(err) +
-        String.fromCharCode(10, 10) + "Entorno: " + MICOCHE_ARCHIVOS.entorno()
-      );
+      // Detalle técnico fijo en pantalla (no desaparece) para diagnosticar el fallo
+      const e = $("pdf-error");
+      e.textContent = "No se pudo guardar el PDF. Detalle: " + MICOCHE_ARCHIVOS.describir(err) +
+        "  ·  Entorno: " + MICOCHE_ARCHIVOS.entorno();
+      e.classList.remove("oculto");
     }
   }
 

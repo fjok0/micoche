@@ -511,6 +511,25 @@ body {
 .btn-borrar          { background: var(--color-rojo-accion); color: white; flex: 0 0 90px; }
 .btn-secundario-form { background: var(--color-azul-claro); color: var(--color-acento-oscuro); }
 
+/* ── Errores y versión en copia de seguridad / PDF ── */
+.backup-error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radio-sm);
+  background: var(--color-rojo-claro);
+  color: #903030;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.backup-version {
+  margin-top: 18px;
+  font-size: 0.72rem;
+  color: var(--color-texto-suave);
+  text-align: center;
+}
+
 /* ── Toast ─────────────────────────────────── */
 .toast {
   position: fixed;

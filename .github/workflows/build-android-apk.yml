@@ -10,7 +10,9 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Fijado a 24.04: ubuntu-latest migra a Ubuntu 26 (oct 2026) y el
+    # paso Setup Android SDK fallo en esa imagen.
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout

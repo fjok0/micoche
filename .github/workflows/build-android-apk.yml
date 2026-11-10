@@ -29,8 +29,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      # Los runners de GitHub ya traen el Android SDK (ANDROID_HOME).
+      # La accion android-actions/setup-android@v3 fallaba, asi que se
+      # usa el SDK preinstalado y solo se aceptan las licencias.
+      - name: Accept Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
 
       - name: Install npm dependencies
         run: npm install

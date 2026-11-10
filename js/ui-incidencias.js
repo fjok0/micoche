@@ -242,7 +242,15 @@
       pdfDoc.download(filename);
       MICOCHE_UI.cerrarModal("modal-exportar");
     } catch (err) {
+      console.error(err);
       MICOCHE_UI.mostrarToast("No se pudo generar el PDF", "error");
+      // Detalle técnico visible para poder diagnosticar el fallo en el móvil
+      window.alert(
+        "No se pudo guardar el PDF." +
+        String.fromCharCode(10, 10) + "Detalle técnico:" + String.fromCharCode(10) +
+        MICOCHE_ARCHIVOS.describir(err) +
+        String.fromCharCode(10, 10) + "Entorno: " + MICOCHE_ARCHIVOS.entorno()
+      );
     }
   }
 

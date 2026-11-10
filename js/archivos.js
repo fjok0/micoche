@@ -57,6 +57,16 @@
 
     // ---------------- via nativa (APK) ----------------
 
+    function describir(err) {
+        if (!err) return "(sin detalle)";
+        if (typeof err === "string") return err;
+        const partes = [];
+        if (err.message) partes.push(err.message);
+        if (err.code) partes.push("codigo " + err.code);
+        if (!partes.length) { try { partes.push(JSON.stringify(err)); } catch (e) { partes.push(String(err)); } }
+        return partes.join(" | ");
+    }
+
     async function compartirNativo(opts) {
         const cap = window.Capacitor;
 
@@ -73,7 +83,15 @@
             escritura.data = opts.base64;
         }
 
-        const res = await cap.nativePromise("Filesystem", "writeFile", escritura);
+        let res;
+        try {
+            res = await cap.nativePromise("Filesystem", "writeFile", escritura);
+        } catch (err) {
+            throw new Error("[APK] Filesystem.writeFile: " + describir(err));
+        }
+        if (!res || !res.uri) {
+            throw new Error("[APK] Filesystem.writeFile no devolvio ruta: " + describir(res));
+        }
 
         try {
             await cap.nativePromise("Share", "share", {
@@ -83,7 +101,7 @@
             });
         } catch (err) {
             if (esCancelacion(err)) return "cancelado";
-            throw err;
+            throw new Error("[APK] Share.share (" + res.uri + "): " + describir(err));
         }
         return "compartido";
     }
@@ -110,7 +128,7 @@
                     await navigator.share({ files: [file], title: opts.title || opts.filename });
                 } catch (err) {
                     if (esCancelacion(err)) return "cancelado";
-                    throw err;
+                    throw new Error("[web] navigator.share: " + describir(err));
                 }
                 return "compartido";
             }
@@ -123,7 +141,8 @@
         document.body.appendChild(a);
         a.click();
         a.remove();
-        URL.revokeObjectURL(url);
+        // No revocar al instante: en Chrome Android cancela la descarga
+        setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
         return "descargado";
     }
 
@@ -145,5 +164,15 @@
         return compartirOdescargarWeb(opts, soloDescarga);
     }
 
-    window.MICOCHE_ARCHIVOS = { esNativo, puedeCompartir, guardarOCompartir };
+    /** Resumen del entorno, para diagnosticar fallos en un movil real. */
+    function entorno() {
+        const cap = window.Capacitor;
+        return "nativo=" + esNativo() +
+               ", plataforma=" + (cap && typeof cap.getPlatform === "function" ? cap.getPlatform() : "web") +
+               ", nativePromise=" + !!(cap && cap.nativePromise) +
+               ", navigator.share=" + (typeof navigator.share) +
+               ", navigator.canShare=" + (typeof navigator.canShare);
+    }
+
+    window.MICOCHE_ARCHIVOS = { esNativo, puedeCompartir, guardarOCompartir, describir, entorno };
 })();

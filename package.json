@@ -1,10 +1,14 @@
 {
   "name": "micoche",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Gestion de vehiculos e incidencias - PWA + APK Capacitor",
   "scripts": {
     "build": "node scripts/copy-web.js"
+  },
+  "dependencies": {
+    "@capacitor/filesystem": "^6.0.4",
+    "@capacitor/share": "^6.0.4"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.1.2",

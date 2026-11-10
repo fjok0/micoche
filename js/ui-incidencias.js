@@ -209,14 +209,36 @@
      EXPORTAR PDF
   ══════════════════════════════════════════ */
   function abrirModalExportar() {
-    const puedeCompartir = !!(navigator.canShare && navigator.share);
-    $("btn-compartir-pdf").classList.toggle("oculto", !puedeCompartir);
+    if (MICOCHE_ARCHIVOS.esNativo()) {
+      // APK: un unico boton que abre el menu nativo de compartir
+      // (Drive, Gmail, WhatsApp, Archivos...), que ya incluye guardar y enviar.
+      $("btn-descargar-pdf").textContent = "Guardar / Compartir PDF";
+      $("btn-compartir-pdf").classList.add("oculto");
+    } else {
+      const puedeCompartir = !!(navigator.canShare && navigator.share);
+      $("btn-compartir-pdf").classList.toggle("oculto", !puedeCompartir);
+    }
     MICOCHE_UI.abrirModal("modal-exportar");
   }
 
   async function onDescargarPdf() {
     try {
       const { pdfDoc, filename } = await MICOCHE_PDF.generarPDF(vehiculoActualId);
+
+      if (MICOCHE_ARCHIVOS.esNativo()) {
+        // APK: pdfmake .download() no funciona en el WebView -> menu nativo
+        const base64 = await new Promise(function (resolve) { pdfDoc.getBase64(resolve); });
+        const r = await MICOCHE_ARCHIVOS.guardarOCompartir({
+          filename:    filename,
+          mime:        "application/pdf",
+          base64:      base64,
+          title:       "MICOCHE - historial del vehículo",
+          dialogTitle: "Guardar o compartir el historial"
+        });
+        if (r !== "cancelado") MICOCHE_UI.cerrarModal("modal-exportar");
+        return;
+      }
+
       pdfDoc.download(filename);
       MICOCHE_UI.cerrarModal("modal-exportar");
     } catch (err) {

@@ -16,25 +16,15 @@
       const json = JSON.stringify(backup, null, 2);
       const fecha = new Date().toISOString().slice(0, 10);
       const filename = `micoche_backup_${fecha}.json`;
-      const blob = new Blob([json], { type: "application/json" });
 
-      if (navigator.canShare && navigator.share) {
-        const file = new File([blob], filename, { type: "application/json" });
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: filename });
-          return;
-        }
-      }
-
-      // Sin Web Share (o sin soporte de archivos): descarga directa
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      // APK: menú nativo de compartir. Navegador: Web Share o descarga.
+      await MICOCHE_ARCHIVOS.guardarOCompartir({
+        filename:    filename,
+        mime:        "application/json",
+        text:        json,
+        title:       "MICOCHE - copia de seguridad",
+        dialogTitle: "Guardar copia de seguridad"
+      });
     } catch (err) {
       MICOCHE_UI.mostrarToast("No se pudo exportar la copia de seguridad", "error");
     }

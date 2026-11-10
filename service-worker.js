@@ -1,4 +1,4 @@
-const CACHE_NAME = "micoche-v5";
+const CACHE_NAME = "micoche-v6";
 
 const PRECACHE = [
   "./",
@@ -12,6 +12,7 @@ const PRECACHE = [
   "./js/db.js",
   "./js/app.js",
   "./js/ui-comunes.js",
+  "./js/archivos.js",
   "./js/ui-vehiculos.js",
   "./js/ui-incidencias.js",
   "./js/ui-backup.js",

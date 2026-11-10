@@ -1,0 +1,8 @@
+{
+  "appId": "com.fjok0.micoche",
+  "appName": "MICOCHE",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}

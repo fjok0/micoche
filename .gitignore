@@ -5,3 +5,14 @@ Thumbs.db
 __pycache__/
 generar_iconos.py
 MICORSE_arquitectura_y_tecnologias.pdf
+
+# Node / Capacitor (se regeneran en cada build de GitHub Actions)
+node_modules/
+www/
+android/
+ios/
+.capacitor/
+package-lock.json
+
+# APK descargado a mano a la carpeta del proyecto (no se sube a git)
+*.apk

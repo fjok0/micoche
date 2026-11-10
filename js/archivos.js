@@ -122,15 +122,17 @@
         }
 
         if (!soloDescarga && navigator.canShare && navigator.share) {
-            const file = new File([blob], opts.filename, { type: opts.mime });
-            if (navigator.canShare({ files: [file] })) {
-                try {
+            try {
+                const file = new File([blob], opts.filename, { type: opts.mime });
+                if (navigator.canShare({ files: [file] })) {
                     await navigator.share({ files: [file], title: opts.title || opts.filename });
-                } catch (err) {
-                    if (esCancelacion(err)) return "cancelado";
-                    throw new Error("[web] navigator.share: " + describir(err));
+                    return "compartido";
                 }
-                return "compartido";
+            } catch (err) {
+                if (esCancelacion(err)) return "cancelado";
+                // Web Share existe pero falla (p. ej. Chrome/Edge en Windows, tipo de
+                // archivo no permitido...): no abandonar, se descarga el archivo.
+                console.warn("[web] navigator.share fallo, se descarga el archivo:", describir(err));
             }
         }
 
@@ -176,7 +178,7 @@
 
     // Identificador de esta version del modulo (se muestra en pantalla para
     // saber que version corre en el movil y si es el APK o el navegador).
-    const VERSION = "archivos-v3";
+    const VERSION = "archivos-v4";
 
     function etiquetaVersion() {
         return VERSION + " · " + (esNativo() ? "app instalada (APK)" : "navegador");
